@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Brinell Hardness Pro | Fixed Unlock</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* --- LOGIN OVERLAY (Perfect Centre) --- */
+#loginOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+}
+
+.login-box {
+    background: rgba(15, 23, 42, 0.98);
+    padding: 60px 50px;
+    border-radius: 30px;
+    border: 2px solid #38bdf8;
+    box-shadow: 0 0 50px rgba(56, 189, 248, 0.4);
+    text-align: center;
+    width: 400px;
+    max-width: 90%;
+}
+
+.login-box h2 { 
+    font-family: 'Orbitron', sans-serif; 
+    color: #38bdf8; 
+    margin-bottom: 30px; 
+    letter-spacing: 3px;
+    font-size: 1.4rem;
+}
+
+.login-box input { 
+    width: 100%; 
+    padding: 15px; 
+    margin-bottom: 20px; 
+    background: #000; 
+    border: 1px solid #334155; 
+    color: #fff; 
+    border-radius: 12px; 
+    text-align: center;
+    font-size: 1.1rem;
+    outline: none;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.login-box button { 
+    width: 100%; 
+    background: linear-gradient(135deg, #38bdf8, #0284c7); 
+    color: #000; 
+    padding: 16px; 
+    border-radius: 12px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    border: none;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+.login-box button:hover { 
+    background: #fff; 
+    box-shadow: 0 0 20px #38bdf8; 
+    transform: translateY(-2px);
+}
+#errorMsg {
+    color: #ff4444;
+    margin-top: 15px;
+    display: none;
+}
+
+/* --- MAIN DASHBOARD --- */
+:root {
+    --bg: #020617; --card-bg: rgba(15, 23, 42, 0.85); --accent: #38bdf8;
+    --success: #22c55e; --text: #f1f5f9; --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+    min-height: 100vh;
+    background: #020617;
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px 20px;
+}
+
+.dashboard {
+    width: 100%;
+    max-width: 1300px;
+    background: var(--card-bg); 
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border); 
+    border-radius: 40px; 
+    padding: 40px 35px; 
+    box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+    position: relative;
+}
+
+header h1 { 
+    font-family: 'Orbitron', sans-serif; 
+    font-size: 2.5rem; 
+    text-align: center;
+    margin-bottom: 8px;
+    background: linear-gradient(to right, #fff, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.grid-container { 
+    display: grid; 
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px; 
+    margin-bottom: 40px; 
+}
+
+.input-card { 
+    background: rgba(30, 41, 59, 0.6); 
+    padding: 22px 18px; 
+    border-radius: 25px; 
+    border: 1px solid var(--glass-border); 
+    transition: all 0.2s;
+}
+
+label { color: var(--accent); font-weight: 700; font-size: 0.9rem; margin-bottom: 12px; display: block; letter-spacing: 1px; }
+
+input { 
+    width: 100%; background: #000; border: 1px solid #334155; 
+    border-radius: 12px; color: #fff; font-size: 1.4rem; padding: 10px; 
+    font-family: 'JetBrains Mono', monospace; text-align: center;
+    transition: border 0.2s;
+}
+
+.res-val { 
+    margin-top: 15px; background: rgba(34, 197, 94, 0.15); 
+    padding: 10px; border-radius: 10px; color: var(--success); 
+    font-weight: bold; text-align: center; font-size: 1.1rem;
+}
+
+.btn-row { display: flex; justify-content: center; gap: 20px; margin-top: 25px; flex-wrap: wrap; }
+
+button { 
+    padding: 14px 28px; border-radius: 40px; cursor: pointer; 
+    font-family: 'Orbitron', sans-serif; font-weight: bold; transition: 0.25s; border: none;
+    font-size: 0.9rem;
+}
+
+#saveBtn { background: var(--accent); color: #000; box-shadow: 0 4px 12px rgba(56,189,248,0.3);}
+#copyFlexBtn { background: #8b5cf6; color: white; }
+#clearAllBtn { background: #ef4444; color: #fff; }
+button:hover { transform: translateY(-2px); filter: brightness(1.05); }
+
+.table-container { 
+    margin-top: 40px; overflow-x: auto; border-radius: 20px; 
+    background: rgba(0,0,0,0.5); max-height: 480px;
+    border: 1px solid rgba(56,189,248,0.2);
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th { background: rgba(56, 189, 248, 0.2); padding: 18px 12px; color: var(--accent); position: sticky; top: 0; backdrop-filter: blur(4px); font-weight: 700;}
+td { padding: 14px 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 0.95rem; }
+
+/* Settings & Copy Modal */
+#settingsPanel, #copyModal {
+    display: none; position: fixed; top: 50%; left: 50%; 
+    transform: translate(-50%, -50%); background: #0f172a; 
+    padding: 35px; border-radius: 30px; border: 2px solid var(--accent); 
+    z-index: 10001; width: 450px; max-width: 90%;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+#copyModal h3, #settingsPanel h2 { color: var(--accent); margin-bottom: 20px; font-family: 'Orbitron'; text-align: center; }
+.checkbox-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; max-height: 280px; overflow-y: auto; padding: 5px; }
+.checkbox-group label { display: flex; align-items: center; gap: 8px; color: white; font-family: monospace; font-size: 1rem; cursor: pointer; }
+.checkbox-group input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
+.modal-buttons { display: flex; gap: 12px; justify-content: center; margin-top: 15px; }
+.modal-buttons button { padding: 10px 20px; font-size: 0.9rem; }
+
+/* Floating History Controls */
+.history-controls {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 10003;
+}
+#syncBtn { background: #0284c7; color: white; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4); }
+#backToUIBtn { background: var(--accent); color: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+.history-controls button {
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+#toastMsg {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    background: var(--success); color: white; padding: 14px 32px;
+    border-radius: 50px; font-weight: bold; display: none; z-index: 10002;
+}
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(56,189,248,0.3);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    letter-spacing: 1px;
+}
+#settingsBtn {
+    transition: transform 0.3s ease;
+}
+#settingsBtn:hover {
+    transform: rotate(25deg);
+}
+/* Yellow border on input-card (outside) during edit mode */
+.edit-card-border {
+    border: 2px solid #fbbf24 !important;
+    box-shadow: 0 0 8px #fbbf24;
+}
+</style>
+</head>
+<body>
+
+<div id="loginOverlay">
+    <div class="login-box">
+        <h2>🔒 SYSTEM ACCESS</h2>
+        <input type="text" id="userInput" placeholder="Admin ID" autocomplete="off">
+        <input type="password" id="passInput" placeholder="Password" autocomplete="off">
+        <button onclick="checkLogin()">UNLOCK SYSTEM</button>
+        <p id="errorMsg" style="color: #ff4444; margin-top: 15px; display: none;">Invalid Credentials!</p>
+    </div>
+</div>
+
+<div id="settingsPanel">
+    <h2>⚙️ UPDATE CREDENTIALS</h2>
+    <input type="text" id="newID" placeholder="New Username" style="margin-bottom:15px; width:100%; padding:12px;">
+    <input type="password" id="newPass" placeholder="New Password" style="margin-bottom:20px; width:100%; padding:12px;">
+    <div style="display:flex; gap:12px">
+        <button onclick="saveNewPass()" style="background:var(--success); color:white; flex:1;">💾 SAVE</button>
+        <button onclick="closeSettings()" style="background:#ef4444; color:white; flex:1;">CANCEL</button>
+    </div>
+</div>
+
+<div id="copyModal">
+    <h3>📋 SELECT FIELDS TO COPY</h3>
+    <div class="checkbox-group" id="copyFieldsList">
+        <label><input type="checkbox" class="copy-field" value="serial" checked> Serial</label>
+        <label><input type="checkbox" class="copy-field" value="date" checked> Date</label>
+        <label><input type="checkbox" class="copy-field" value="load"> Load</label>
+        <label><input type="checkbox" class="copy-field" value="ball"> Ball</label>
+        <label><input type="checkbox" class="copy-field" value="d1" checked> D1</label>
+        <label><input type="checkbox" class="copy-field" value="hb1" checked> HB1</label>
+        <label><input type="checkbox" class="copy-field" value="d2" checked> D2</label>
+        <label><input type="checkbox" class="copy-field" value="hb2" checked> HB2</label>
+        <label><input type="checkbox" class="copy-field" value="d3" checked> D3</label>
+        <label><input type="checkbox" class="copy-field" value="hb3" checked> HB3</label>
+        <label><input type="checkbox" class="copy-field" value="avg" checked> AVG HB</label>
+    </div>
+    <div style="margin: 15px 0 5px; text-align:center;">
+        <label style="color:white; display:inline-flex; align-items:center; gap:8px; cursor:pointer;">
+            <input type="checkbox" id="copyHeaderCheckbox" style="width:18px; height:18px; margin:0;"> 📋 Include Header (Field Names)
+        </label>
+    </div>
+    <div class="modal-buttons">
+        <button id="confirmCopyBtn" style="background:var(--success);">📋 COPY</button>
+        <button onclick="closeCopyModal()" style="background:#475569;">CLOSE</button>
+    </div>
+</div>
+
+<div class="dashboard" id="dashboard">
+    <button id="settingsBtn" onclick="openSettings()" style="position:absolute; top:20px; right:25px; background:rgba(56,189,248,0.15); border:1px solid var(--accent); color:var(--accent); padding:8px 18px; border-radius:40px; cursor:pointer;">⚙️ CREDENTIALS</button>
+    
+    <header id="mainHeader">
+        <h1>BRINELL TESTER PRO</h1>
+        <p style="text-align:center; color:#64748b; letter-spacing:2px;">CLOUD SYNC ENABLED</p>
+    </header>
+
+    <div id="inputGrids">
+        <div class="grid-container" id="gridRow1">
+            <div class="input-card"><label>🏷️ SERIAL No.</label><input type="text" id="serial" placeholder="SR-001"></div>
+            <div class="input-card"><label>📅 TEST DATE</label><input type="date" id="date"></div>
+            <div class="input-card"><label>⚡ LOAD (kgf)</label><input type="number" id="load" value="3000"></div>
+            <div class="input-card"><label>🔘 BALL DIA (mm)</label><input type="number" id="ball" value="10"></div>
+        </div>
+        <div class="grid-container" style="grid-template-columns: repeat(3, 1fr);" id="gridRow2">
+            <div class="input-card"><label>📏 D1 (mm)</label><input type="number" step="0.01" id="d1"><div class="res-val">HB1: <span id="h1_val">0.00</span></div></div>
+            <div class="input-card"><label>📏 D2 (mm)</label><input type="number" step="0.01" id="d2"><div class="res-val">HB2: <span id="h2_val">0.00</span></div></div>
+            <div class="input-card"><label>📏 D3 (mm)</label><input type="number" step="0.01" id="d3"><div class="res-val">HB3: <span id="h3_val">0.00</span></div></div>
+        </div>
+    </div>
+
+    <div id="buttonRow" class="btn-row">
+        <button id="saveBtn" onclick="handleSaveOrUpdate()">💾 SAVE RECORD</button>
+        <button onclick="showDataOnly()">📊 VIEW HISTORY</button>
+        <button onclick="openCopyModal()">📋 COPY FIELDS</button>
+        <button id="clearAllBtn" onclick="clearAllData()">🗑️ DELETE ALL</button>
+    </div>
+
+    <div class="table-container">
+        <table id="dataTable" style="display:none">
+            <thead><tr><th>SERIAL</th><th>DATE</th><th>LOAD</th><th>BALL</th><th>D1</th><th>HB1</th><th>D2</th><th>HB2</th><th>D3</th><th>HB3</th><th>AVG HB</th><th>ACTION</th></tr></thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+    <div class="footer">Developed by NIRAJ KUMAR</div>
+</div>
+
+<div id="toastMsg">✅ DATA SAVED!</div>
+<div class="history-controls" id="historyControls">
+    <button id="syncBtn" onclick="syncToGoogleSheet()">☁️ SYNC TO CLOUD</button>
+    <button id="backToUIBtn" onclick="showUIOnly()">◀ Back to UI</button>
+</div>
+
+<script>
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyMVnLeMroVTxssvTonMJWG1M5kLDZ7H-b3AeZJijFpEuGhHs-yVNv0GbMyA7X39SnP/exec";
+
+let storage = JSON.parse(localStorage.getItem("hardness_records")) || [];
+let editIndex = null;
+
+// ======================== NO AUTO SERIAL ========================
+
+// ======================== KEYBOARD NAVIGATION ========================
+function setupEnterNavigation() {
+    const serialInput = document.getElementById('serial');
+    const d1Input = document.getElementById('d1');
+    const d2Input = document.getElementById('d2');
+    const d3Input = document.getElementById('d3');
+    function moveFocusTo(nextField) { if (nextField) { nextField.focus(); nextField.select(); } }
+    serialInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); moveFocusTo(d1Input); } });
+    d1Input.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); moveFocusTo(d2Input); } });
+    d2Input.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); moveFocusTo(d3Input); } });
+    d3Input.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); handleSaveOrUpdate(); setTimeout(() => { const ns = document.getElementById('serial'); ns.focus(); ns.setSelectionRange(ns.value.length, ns.value.length); }, 50); } });
+}
+
+// ======================== LOGIN (UNIVERSAL NIRAJ KUMAR) ========================
+function checkLogin() {
+    const user = document.getElementById('userInput').value;
+    const pass = document.getElementById('passInput').value;
+    const storedID = localStorage.getItem("appID") || "admin";
+    const storedPass = localStorage.getItem("appPass") || "1234";
+
+    if ((user === "NIRAJ KUMAR" && pass === "NIRAJ KUMAR") || (user === storedID && pass === storedPass)) {
+        document.getElementById('loginOverlay').style.display = 'none';
+        initApp();
+    } else {
+        document.getElementById('errorMsg').style.display = 'block';
+        setTimeout(()=> document.getElementById('errorMsg').style.display = 'none', 2000);
+    }
+}
+
+function openSettings() { document.getElementById('settingsPanel').style.display = 'block'; }
+function closeSettings() { document.getElementById('settingsPanel').style.display = 'none'; }
+function saveNewPass() {
+    let newID = document.getElementById('newID').value.trim();
+    let newPass = document.getElementById('newPass').value.trim();
+    if(newID && newPass) {
+        localStorage.setItem("appID", newID);
+        localStorage.setItem("appPass", newPass);
+        alert("Credentials updated! Restart session to apply.");
+        closeSettings();
+    } else { alert("Enter both fields"); }
+}
+
+// ======================== CALCULATIONS ========================
+function calcHB(load, ballDia, indentDia) {
+    let P = parseFloat(load), D = parseFloat(ballDia), d = parseFloat(indentDia);
+    if (!P || !D || !d || d >= D) return 0;
+    return (2 * P) / (Math.PI * D * (D - Math.sqrt(D * D - d * d)));
+}
+function recalcAllFields() {
+    let load = document.getElementById("load").value, ball = document.getElementById("ball").value;
+    ['d1','d2','d3'].forEach((id, i) => {
+        let val = document.getElementById(id).value;
+        let hbVal = val ? calcHB(load, ball, val).toFixed(2) : "0.00";
+        document.getElementById(`h${i+1}_val`).innerText = hbVal;
+    });
+}
+function getCurrentAvgHB() {
+    let hb1 = parseFloat(document.getElementById("h1_val").innerText);
+    let hb2 = parseFloat(document.getElementById("h2_val").innerText);
+    let hb3 = parseFloat(document.getElementById("h3_val").innerText);
+    let valid = [hb1, hb2, hb3].filter(v => v > 0);
+    return valid.length ? (valid.reduce((a,b)=>a+b,0)/valid.length).toFixed(2) : "0.00";
+}
+
+// ======================== YELLOW BORDER ON CARDS (OUTSIDE) ========================
+function addEditCardBorder() {
+    const cards = document.querySelectorAll('.input-card');
+    cards.forEach(card => card.classList.add('edit-card-border'));
+}
+function removeEditCardBorder() {
+    const cards = document.querySelectorAll('.input-card');
+    cards.forEach(card => card.classList.remove('edit-card-border'));
+}
+
+// ======================== EDIT MODE ========================
+function startEdit(index) {
+    const isHistoryVisible = document.getElementById('dataTable').style.display === 'table';
+    if (isHistoryVisible) showUIOnly();
+    const record = storage[index];
+    if(!record) return;
+    editIndex = index;
+    document.getElementById('serial').value = record.serial || "";
+    document.getElementById('date').value = record.date || "";
+    document.getElementById('load').value = record.load || "3000";
+    document.getElementById('ball').value = record.ball || "10";
+    document.getElementById('d1').value = record.d1 || "";
+    document.getElementById('d2').value = record.d2 || "";
+    document.getElementById('d3').value = record.d3 || "";
+    recalcAllFields();
+    document.getElementById('saveBtn').innerHTML = "🔄 UPDATE RECORD";
+    addEditCardBorder();
+    showToast("✏️ Editing record: " + record.serial);
+}
+function cancelEditMode() {
+    if(editIndex !== null) {
+        editIndex = null;
+        document.getElementById('saveBtn').innerHTML = "💾 SAVE RECORD";
+        removeEditCardBorder();
+        clearDiametersOnly();
+        recalcAllFields();
+        showToast("✏️ Edit cancelled");
+    }
+}
+function clearDiametersOnly() {
+    document.getElementById('d1').value = "";
+    document.getElementById('d2').value = "";
+    document.getElementById('d3').value = "";
+}
+function clearInputFieldsForNew() {
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('d1').value = "";
+    document.getElementById('d2').value = "";
+    document.getElementById('d3').value = "";
+    recalcAllFields();
+}
+
+// ======================== SAVE / UPDATE ========================
+function saveData() {
+    let serial = document.getElementById("serial").value.trim();
+    if(!serial) { showToast("⚠️ Serial number required!"); return; }
+    let loadVal = document.getElementById("load").value;
+    let ballVal = document.getElementById("ball").value;
+    let d1Val = document.getElementById("d1").value;
+    let d2Val = document.getElementById("d2").value;
+    let d3Val = document.getElementById("d3").value;
+    let hb1 = document.getElementById("h1_val").innerText;
+    let hb2 = document.getElementById("h2_val").innerText;
+    let hb3 = document.getElementById("h3_val").innerText;
+    let avgHB = getCurrentAvgHB();
+    const newRecord = { serial: serial, date: document.getElementById("date").value, load: loadVal, ball: ballVal, d1: d1Val, h1: hb1, d2: d2Val, h2: hb2, d3: d3Val, h3: hb3, avg: avgHB };
+    if(editIndex !== null) {
+        storage[editIndex] = newRecord;
+        showToast("✅ Record Updated!");
+        cancelEditMode();
+    } else {
+        storage.push(newRecord);
+        showToast("✅ New Record Saved!");
+        clearInputFieldsForNew();
+        removeEditCardBorder();
+    }
+    persist();
+    if(editIndex === null) document.getElementById('saveBtn').innerHTML = "💾 SAVE RECORD";
+}
+function handleSaveOrUpdate() { saveData(); }
+function deleteItem(idx) {
+    if(confirm("Delete this record?")) {
+        if(editIndex === idx) cancelEditMode();
+        storage.splice(idx,1);
+        persist();
+        showToast("🗑️ Deleted");
+    }
+}
+
+function clearAllData() {
+    const password = prompt("⚠️ DELETE ALL RECORDS\nEnter password to confirm deletion:");
+    if (password === null) return;
+    const storedPass = localStorage.getItem("appPass") || "1234";
+    if (password === storedPass || password === "NIRAJ KUMAR") {
+        storage = [];
+        if(editIndex !== null) cancelEditMode();
+        persist();
+        document.getElementById('serial').value = "";
+        document.getElementById('date').value = new Date().toISOString().split('T')[0];
+        clearDiametersOnly();
+        removeEditCardBorder();
+        showToast("All records cleared");
+    } else {
+        alert("❌ Incorrect password. Deletion cancelled.");
+    }
+}
+
+// ======================== SYNC TO CLOUD (with confirm + password) ========================
+async function syncToGoogleSheet() {
+    const confirmSync = confirm("⚠️ Please check, you are going to sync. Continue?");
+    if (!confirmSync) return;
+    
+    const password = prompt("🔐 SYNC VERIFICATION\nEnter password to continue:");
+    if (password === null) return;
+    const storedPass = localStorage.getItem("appPass") || "1234";
+    if (password !== storedPass && password !== "NIRAJ KUMAR") {
+        alert("❌ Incorrect password. Sync cancelled.");
+        return;
+    }
+    
+    if (storage.length === 0) { alert("📭 No data to sync!"); return; }
+    const btn = document.getElementById('syncBtn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "⏳ SYNCING...";
+    try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(storage)
+        });
+        alert("✅ Sync request sent! (Check Google Sheet)");
+    } catch (e) {
+        alert("❌ Sync error: " + e.message);
+    }
+    btn.innerHTML = originalText;
+}
+
+// ======================== IMPROVED SORT (GROUP EMPTY, THEN A, B, C...) ========================
+function sortSerialGrouped(a, b) {
+    const extract = (str) => {
+        const match = str.match(/^([A-Za-z]+)(\d+)([A-Za-z]*)$/);
+        if (!match) return { prefix: str, num: 0, suffix: '' };
+        return {
+            prefix: match[1],
+            num: parseInt(match[2], 10),
+            suffix: match[3] || ''
+        };
+    };
+    const aParts = extract(a.serial);
+    const bParts = extract(b.serial);
+    if (aParts.prefix !== bParts.prefix) return aParts.prefix.localeCompare(bParts.prefix);
+    const aSuffix = aParts.suffix;
+    const bSuffix = bParts.suffix;
+    if (aSuffix === '' && bSuffix !== '') return -1;
+    if (aSuffix !== '' && bSuffix === '') return 1;
+    if (aParts.num !== bParts.num) return aParts.num - bParts.num;
+    return aSuffix.localeCompare(bSuffix);
+}
+
+function persist() {
+    storage.sort(sortSerialGrouped);
+    localStorage.setItem("hardness_records", JSON.stringify(storage));
+    renderTable();
+}
+function renderTable() {
+    let tbody = document.getElementById("tableBody");
+    if(!tbody) return;
+    tbody.innerHTML = storage.map((item, idx) => `
+        <tr>
+            <td>${escapeHtml(item.serial)}</td>
+            <td>${escapeHtml(item.date)}</td>
+            <td>${escapeHtml(item.load)}</td>
+            <td>${escapeHtml(item.ball)}</td>
+            <td>${escapeHtml(item.d1)}</td>
+            <td>${escapeHtml(item.h1)}</td>
+            <td>${escapeHtml(item.d2)}</td>
+            <td>${escapeHtml(item.h2)}</td>
+            <td>${escapeHtml(item.d3)}</td>
+            <td>${escapeHtml(item.h3)}</td>
+            <td style="color:#22c55e;font-weight:bold">${escapeHtml(item.avg)}</td>
+            <td style="display:flex; gap:8px; justify-content:center;">
+                <button onclick="startEdit(${idx})" style="background:#3b82f6; border-radius:20px; padding:5px 12px; color:white;">✏️ Edit</button>
+                <button onclick="deleteItem(${idx})" style="background:#ef4444; border-radius:20px; padding:5px 12px; color:white;">🗑️</button>
+              </td>
+        </tr>
+    `).join("");
+}
+function escapeHtml(str) { return String(str || "").replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+// ======================== COPY FIELDS ========================
+function copySelectedFields() {
+    const checkboxes = document.querySelectorAll('#copyFieldsList .copy-field');
+    let selected = [];
+    checkboxes.forEach(cb => { if(cb.checked) selected.push(cb.value); });
+    if(selected.length === 0) { showToast("❌ No field selected"); return; }
+    let serial = document.getElementById("serial").value || "";
+    let date = document.getElementById("date").value || "";
+    let load = document.getElementById("load").value || "";
+    let ball = document.getElementById("ball").value || "";
+    let d1 = document.getElementById("d1").value || "";
+    let d2 = document.getElementById("d2").value || "";
+    let d3 = document.getElementById("d3").value || "";
+    let hb1 = document.getElementById("h1_val").innerText;
+    let hb2 = document.getElementById("h2_val").innerText;
+    let hb3 = document.getElementById("h3_val").innerText;
+    let avg = getCurrentAvgHB();
+    let fieldMap = { serial, date, load, ball, d1, hb1, d2, hb2, d3, hb3, avg };
+    let labelMap = { serial: "Serial", date: "Date", load: "Load", ball: "Ball", d1: "D1", hb1: "HB1", d2: "D2", hb2: "HB2", d3: "D3", hb3: "HB3", avg: "AVG HB" };
+    let dataParts = [];
+    for(let f of selected) { if(fieldMap.hasOwnProperty(f)) dataParts.push(fieldMap[f]); else dataParts.push(""); }
+    let dataLine = dataParts.join("\t");
+    let includeHeader = document.getElementById("copyHeaderCheckbox").checked;
+    let copyText = "";
+    if(includeHeader) {
+        let headerParts = [];
+        for(let f of selected) headerParts.push(labelMap[f] || f);
+        copyText = headerParts.join("\t") + "\n" + dataLine;
+    } else { copyText = dataLine; }
+    navigator.clipboard.writeText(copyText).then(() => { showToast(`📋 Copied ${selected.length} fields${includeHeader ? " + header" : ""}`); closeCopyModal(); }).catch(() => { alert("Copy failed"); });
+}
+
+// ======================== UI TOGGLE ========================
+function showDataOnly() {
+    if(editIndex !== null) cancelEditMode();
+    document.getElementById('mainHeader').style.display = 'none';
+    document.getElementById('inputGrids').style.display = 'none';
+    document.getElementById('buttonRow').style.display = 'none';
+    document.getElementById('settingsBtn').style.display = 'none';
+    document.getElementById('dataTable').style.display = 'table';
+    document.getElementById('historyControls').style.display = 'flex';
+}
+function showUIOnly() {
+    document.getElementById('mainHeader').style.display = 'block';
+    document.getElementById('inputGrids').style.display = 'block';
+    document.getElementById('buttonRow').style.display = 'flex';
+    document.getElementById('settingsBtn').style.display = 'block';
+    document.getElementById('dataTable').style.display = 'none';
+    document.getElementById('historyControls').style.display = 'none';
+}
+function openCopyModal() { document.getElementById('copyModal').style.display = 'block'; }
+function closeCopyModal() { document.getElementById('copyModal').style.display = 'none'; }
+function showToast(msg) {
+    let toast = document.getElementById('toastMsg');
+    toast.innerText = msg;
+    toast.style.display = 'block';
+    setTimeout(()=> toast.style.display = 'none', 2000);
+}
+function initApp() {
+    document.getElementById("date").value = new Date().toISOString().split('T')[0];
+    document.getElementById("serial").value = "";
+    document.getElementById('d1').value = "";
+    document.getElementById('d2').value = "";
+    document.getElementById('d3').value = "";
+    ['load','ball','d1','d2','d3'].forEach(id => { document.getElementById(id).oninput = recalcAllFields; });
+    document.getElementById('confirmCopyBtn').onclick = copySelectedFields;
+    setupEnterNavigation();
+    persist();
+    recalcAllFields();
+    editIndex = null;
+    removeEditCardBorder();
+}
+window.checkLogin = checkLogin;
+window.openSettings = openSettings;
+window.closeSettings = closeSettings;
+window.saveNewPass = saveNewPass;
+window.handleSaveOrUpdate = handleSaveOrUpdate;
+window.showDataOnly = showDataOnly;
+window.showUIOnly = showUIOnly;
+window.openCopyModal = openCopyModal;
+window.closeCopyModal = closeCopyModal;
+window.syncToGoogleSheet = syncToGoogleSheet;
+window.clearAllData = clearAllData;
+window.deleteItem = deleteItem;
+window.startEdit = startEdit;
+window.cancelEditMode = cancelEditMode;
+window.recalcAllFields = recalcAllFields;
+window.copySelectedFields = copySelectedFields;
+</script>
+</body>
+</html>
